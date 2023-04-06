@@ -24,7 +24,8 @@ on:
 
 env:
   AWS_REGION: us-west-2
-  S3_BUCKET_NAME: ops-auto-demo-2
+  # PR_NUMBER: ${{ github.event.number }}
+  S3_BUCKET_NAME: ops-auto-demo-2-${{github.event.number}}
   # CLOUDFRONT_DISTRIBUTION_ID: ETO6BXI5MZ802
   # CLOUDFRONT_DOMAIN_NAME: d1l4hqnfn2c0hd.cloudfront.net
   # OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
