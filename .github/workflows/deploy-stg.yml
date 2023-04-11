@@ -1,7 +1,7 @@
-name: Deploy to Vercel
+name: Deploy to S3 and cloudfront
 on:
-  pull_request:
-    types: [opened, reopened]
+  pull_request_review:
+    types: [submitted]
 
 # jobs:
 #   deploy:
@@ -25,7 +25,10 @@ on:
 env:
   AWS_REGION: us-west-2
   # PR_NUMBER: ${{ github.event.number }}
-  S3_BUCKET_NAME: ops-auto-demo-2-${{github.event.number}}
+  # S3_BUCKET_NAME: ops-auto-demo-2-${{github.event.number}}
+  S3_BUCKET_NAME: ops-auto-demo-2
+  CLOUDFRONT_DISTRIBUTION_ID: E16XXFYTTKCM6N
+  CLOUDFRONT_DOMAIN_NAME: d1i9e3ca5iu1kp.cloudfront.net
   # CLOUDFRONT_DISTRIBUTION_ID: ETO6BXI5MZ802
   # CLOUDFRONT_DOMAIN_NAME: d1l4hqnfn2c0hd.cloudfront.net
   # OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
@@ -55,7 +58,9 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
-    - name: Upload to S3
-      run: aws s3 mb s3://${{ env.S3_BUCKET_NAME }}
+    # - name: Create bucket in S3
+    #   run: aws s3 mb s3://${{ env.S3_BUCKET_NAME }}
     - name: Deploy to S3
       run: "aws s3 sync --delete dist/ s3://${{ env.S3_BUCKET_NAME }}"
+    - name: Invalidate cloudfront
+      run: "aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths '/*'" 
