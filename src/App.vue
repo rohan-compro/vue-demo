@@ -9,7 +9,7 @@
 
   <main>
     <h1>
-      Hello Everyone!! It is demo from ashmeet ashmeet. Its a new demo from ashmeet. Please check
+      Hello Everyone!! It is a demo using CDK deployed resources.
     </h1>
   </main>
 </template>
