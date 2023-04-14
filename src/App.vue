@@ -9,7 +9,7 @@
 
   <main>
     <h1>
-      Hello Everyone!! It is a demo using CDK deployed resources.
+      Hello Everyone!! It is a demo using CDK deployed resources. Test 2
     </h1>
   </main>
 </template>
