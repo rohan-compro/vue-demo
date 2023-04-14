@@ -3,43 +3,18 @@ on:
   pull_request_review:
     types: [submitted]
 
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - uses: actions/checkout@v2
-#     - name: Install dependencies
-#       run: npm ci
-#     - name: Run Tests
-#       run: npm test
-#     - name: Build
-#       run: npm run build
-#     - name: Deploy to Vercel
-#       uses: amondnet/vercel-action@v20
-#       with:
-#         vercel-token: ${{ secrets.VERCEL_TOKEN }}
-#         vercel-org-id: 6pMR6FdeWudZepBZQHtfqiML
-#         vercel-project-id: prj_crvr61GZqv0fkIpLRHmkLelSCnGl
-
-
 env:
   AWS_REGION: us-west-2
-  # PR_NUMBER: ${{ github.event.number }}
-  # S3_BUCKET_NAME: ops-auto-demo-2-${{github.event.number}}
   S3_BUCKET_NAME: ops-website-dev-12
   CLOUDFRONT_DISTRIBUTION_ID: E27J0OMR7IKJPF
   CLOUDFRONT_DOMAIN_NAME: d12g8n7j01hnz2.cloudfront.net
-  # CLOUDFRONT_DISTRIBUTION_ID: ETO6BXI5MZ802
-  # CLOUDFRONT_DOMAIN_NAME: d1l4hqnfn2c0hd.cloudfront.net
-  # OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
-  # OKTA_ISSUER: https://cambridgeorg.oktapreview.com
-  # OKTA_BASE_URL: https://cambridgeorg.oktapreview.com/oauth2/ausq6drtfwv8GSDTp0h7
-  # OKTA_REDIRECT_URI: https://d1l4hqnfn2c0hd.cloudfront.net/implicit/callback
+
 
 jobs:
-  deploy:
+  approved:
+    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
-    environment: dev
+    # environment: dev
     timeout-minutes: 8
     steps:
     - uses: actions/checkout@v3
@@ -58,8 +33,6 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
-    # - name: Create bucket in S3
-    #   run: aws s3 mb s3://${{ env.S3_BUCKET_NAME }}
     - name: Deploy to S3
       run: "aws s3 sync --delete dist/ s3://${{ env.S3_BUCKET_NAME }}"
     - name: Invalidate cloudfront
